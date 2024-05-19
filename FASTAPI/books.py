@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from typing import Dict
+from fastapi import FastAPI, Body
 
 app = FastAPI()
 
@@ -33,7 +34,7 @@ BOOKS = [
         'title': 'Title Six',
         'author': 'Author Two',
         'category': 'Math'        
-    }
+    },
 ]
 
 
@@ -131,3 +132,31 @@ async def read_books_by_author(author: str):
         if book.get('author').casefold() == author.casefold():
             books_to_return.append(book)
     return books_to_return
+
+
+
+
+
+# Endpoint to create a new book
+@app.post('/books/create_book')
+async def create_book(new_book: Dict[str, str] = Body(...)): # Better Error Handling
+    """
+    Adds a new book to the list.
+    
+    Args:
+        new_book: The book to add as a dictionary.
+    
+    Returns:
+        The newly added book.
+    """
+    BOOKS.append(new_book)
+    return new_book
+
+
+# My Original Implementation
+# @app.post('/books/create_book')
+# async def create_book(new_book=Body()):
+#    BOOKS.append(new_book)
+
+# riginal Implementation: Uses Body() but without any additional parameters. 
+# This will still work but lacks the explicit requirement indication provided by Body(...).
