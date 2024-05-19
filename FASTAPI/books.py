@@ -1,3 +1,7 @@
+# How to access the local hostt : uvicorn books:app --reload
+# http://127.0.0.1:8000/
+# access documentation: http://127.0.0.1:8000/docs
+
 from typing import Dict
 from fastapi import FastAPI, Body
 
@@ -158,5 +162,24 @@ async def create_book(new_book: Dict[str, str] = Body(...)): # Better Error Hand
 # async def create_book(new_book=Body()):
 #    BOOKS.append(new_book)
 
-# riginal Implementation: Uses Body() but without any additional parameters. 
+# Original Implementation: Uses Body() but without any additional parameters. 
 # This will still work but lacks the explicit requirement indication provided by Body(...).
+
+
+
+@app.put("/books/update_book")
+async def update_book(updated_book: Dict[str, str] = Body(...)):
+    """
+    Updates a book in the list.
+    
+    Args:
+        updated_book: The updated book as a dictionary.
+    
+    Returns:
+        The updated book or a message if the book was not found.
+    """
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == updated_book.get('title').casefold():
+            BOOKS[i] = updated_book
+            return updated_book
+    return {"error": "Book not found"}
