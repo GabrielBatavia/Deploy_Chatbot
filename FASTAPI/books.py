@@ -187,9 +187,23 @@ async def update_book(updated_book: Dict[str, str] = Body(...)):
 
 
 
+# Endpoint to delete a book with title that being the key
 @app.delete("/books/delete_book/{book_title}")
-async def delete_book(book_title : str):
+async def delete_book(book_title: str):
+    """
+    Deletes a book from the list based on its title.
+
+    Args:
+        book_title (str): The title of the book to delete.
+
+    Returns:
+        dict: A dictionary with a message indicating the deletion status.
+
+    Raises:
+        HTTPException: If the book with the given title is not found.
+    """
     for i in range(len(BOOKS)):
         if BOOKS[i].get('title').casefold() == book_title.casefold():
             BOOKS.pop(i)
-            break
+            return {"message": f"Book titled '{book_title}' has been deleted."}
+    raise HTTPException(status_code=404, detail="Book not found")
