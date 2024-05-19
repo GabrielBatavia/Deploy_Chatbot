@@ -167,6 +167,7 @@ async def create_book(new_book: Dict[str, str] = Body(...)): # Better Error Hand
 
 
 
+# Endpoint to update a book with title that being the key
 @app.put("/books/update_book")
 async def update_book(updated_book: Dict[str, str] = Body(...)):
     """
@@ -183,3 +184,12 @@ async def update_book(updated_book: Dict[str, str] = Body(...)):
             BOOKS[i] = updated_book
             return updated_book
     return {"error": "Book not found"}
+
+
+
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title : str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
